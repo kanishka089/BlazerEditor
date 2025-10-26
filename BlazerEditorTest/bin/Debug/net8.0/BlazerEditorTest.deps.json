@@ -1,0 +1,58 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "BlazerEditorTest/1.0.0": {
+        "dependencies": {
+          "BlazerEditor": "1.0.0",
+          "Radzen.Blazor": "8.1.4"
+        },
+        "runtime": {
+          "BlazerEditorTest.dll": {}
+        }
+      },
+      "Radzen.Blazor/8.1.4": {
+        "runtime": {
+          "lib/net8.0/Radzen.Blazor.dll": {
+            "assemblyVersion": "8.1.4.0",
+            "fileVersion": "8.1.4.0"
+          }
+        }
+      },
+      "BlazerEditor/1.0.0": {
+        "dependencies": {
+          "Radzen.Blazor": "8.1.4"
+        },
+        "runtime": {
+          "BlazerEditor.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "BlazerEditorTest/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Radzen.Blazor/8.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8gnQBJX32SDEx5Fynb/BV81ONIFqyp3PxTD6ZaiXw5kYR6dEexhb7mWBv7bxS4DGbDSH9MXIAjIGJ+ceinvH/A==",
+      "path": "radzen.blazor/8.1.4",
+      "hashPath": "radzen.blazor.8.1.4.nupkg.sha512"
+    },
+    "BlazerEditor/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

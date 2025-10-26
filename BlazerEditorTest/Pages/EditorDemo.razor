@@ -1,0 +1,106 @@
+@page "/editordemo"
+@inject IJSRuntime JS
+
+<PageTitle>BlazerEditor Demo</PageTitle>
+
+<div style="display: flex; flex-direction: column; height: 100vh;">
+    <div style="padding: 20px; background: linear-gradient(135deg, #007aff 0%, #0051d5 100%); color: white;">
+        <h1 style="margin: 0 0 10px 0;">🎨 BlazerEditor Demo</h1>
+        <p style="margin: 0 0 15px 0;">Free & Open Source Email Template Editor for Blazor</p>
+        <div style="display: flex; gap: 10px;">
+            <button @onclick="ExportHtml" style="padding: 10px 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                📤 Export HTML
+            </button>
+            <button @onclick="SaveDesign" style="padding: 10px 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                💾 Save Design
+            </button>
+            <button @onclick="LoadSample" style="padding: 10px 20px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                📋 Load Sample
+            </button>
+        </div>
+    </div>
+    
+    <div style="flex: 1; overflow: hidden;">
+        <EmailEditor @ref="editor" Options="options" />
+    </div>
+</div>
+
+@code {
+    private BlazerEditor.Components.EmailEditor? editor;
+    private EditorOptions options = new()
+    {
+        Appearance = new AppearanceConfig { Theme = "modern_light" },
+        MinHeight = 600
+    };
+
+    private async Task ExportHtml()
+    {
+        if (editor == null) return;
+        var result = await editor.ExportHtmlAsync();
+        Console.WriteLine("=== EXPORTED HTML ===");
+        Console.WriteLine(result.Html);
+        await JS.InvokeVoidAsync("alert", "HTML exported! Check browser console (F12)");
+    }
+
+    private async Task SaveDesign()
+    {
+        if (editor == null) return;
+        var design = await editor.SaveDesignAsync();
+        var json = System.Text.Json.JsonSerializer.Serialize(design, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        Console.WriteLine("=== SAVED DESIGN ===");
+        Console.WriteLine(json);
+        await JS.InvokeVoidAsync("alert", "Design saved! Check browser console (F12)");
+    }
+
+    private async Task LoadSample()
+    {
+        if (editor == null) return;
+        
+        var sampleDesign = new EmailDesign
+        {
+            Body = new EmailBody
+            {
+                Values = new BodyValues
+                {
+                    BackgroundColor = "#f0f0f0",
+                    ContentWidth = "600px"
+                },
+                Rows = new List<Row>
+                {
+                    new Row
+                    {
+                        Cells = new List<int> { 1 },
+                        Values = new RowValues
+                        {
+                            BackgroundColor = "#007aff",
+                            Padding = "40px 20px"
+                        },
+                        Columns = new List<Column>
+                        {
+                            new Column
+                            {
+                                Contents = new List<Content>
+                                {
+                                    new Content
+                                    {
+                                        Type = "heading",
+                                        Values = new ContentValues
+                                        {
+                                            Text = "Welcome to BlazerEditor!",
+                                            FontSize = "32px",
+                                            Color = "#ffffff",
+                                            TextAlign = "center"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        await editor.LoadDesignAsync(sampleDesign);
+        await JS.InvokeVoidAsync("alert", "Sample design loaded!");
+    }
+}

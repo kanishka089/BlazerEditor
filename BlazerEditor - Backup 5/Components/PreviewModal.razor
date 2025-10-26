@@ -1,0 +1,38 @@
+@using BlazerEditor.Models
+
+<div class="preview-modal @(IsVisible ? "visible" : "")">
+    <div class="preview-overlay" @onclick="Close"></div>
+    <div class="preview-content">
+        <div class="preview-header">
+            <h2>Email Preview</h2>
+            <div class="preview-actions">
+                <button class="preview-btn @(PreviewDevice == "desktop" ? "active" : "")" 
+                        @onclick='() => PreviewDevice = "desktop"'>
+                    🖥️ Desktop
+                </button>
+                <button class="preview-btn @(PreviewDevice == "mobile" ? "active" : "")" 
+                        @onclick='() => PreviewDevice = "mobile"'>
+                    📱 Mobile
+                </button>
+                <button class="preview-btn-close" @onclick="Close">✕</button>
+            </div>
+        </div>
+        <div class="preview-body @PreviewDevice">
+            <iframe srcdoc="@HtmlContent" class="preview-iframe"></iframe>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string HtmlContent { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private string PreviewDevice { get; set; } = "desktop";
+
+    private async Task Close()
+    {
+        IsVisible = false;
+        await OnClose.InvokeAsync();
+    }
+}

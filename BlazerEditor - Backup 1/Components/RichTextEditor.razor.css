@@ -1,0 +1,85 @@
+.rich-text-editor {
+    border: 1px solid #d1d1d6;
+    border-radius: 6px;
+    overflow: hidden;
+    background: white;
+}
+
+.rte-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: #f5f5f7;
+    border-bottom: 1px solid #d1d1d6;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 2px;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 24px;
+    background: #d1d1d6;
+    margin: 0 4px;
+}
+
+.rte-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: #1d1d1f;
+}
+
+.rte-btn:hover {
+    background: #e8e8ed;
+    border-color: #d1d1d6;
+}
+
+.rte-btn:active {
+    background: #d1d1d6;
+}
+
+.rte-btn strong,
+.rte-btn em,
+.rte-btn u,
+.rte-btn s {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.rte-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 12px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1d1d1f;
+    font-family: inherit;
+    resize: vertical;
+    direction: ltr;
+    text-align: left;
+}
+
+.rte-textarea:focus {
+    background: #fafafa;
+}
+
+.rte-textarea::placeholder {
+    color: #999;
+    font-style: italic;
+}

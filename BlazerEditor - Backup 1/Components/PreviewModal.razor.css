@@ -1,0 +1,129 @@
+.preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-modal.visible {
+    display: flex;
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.preview-content {
+    position: relative;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.preview-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.preview-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.preview-btn {
+    padding: 8px 16px;
+    border: 1px solid #d1d1d6;
+    background: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.preview-btn:hover {
+    background: #f5f5f7;
+}
+
+.preview-btn.active {
+    background: #007aff;
+    color: white;
+    border-color: #007aff;
+}
+
+.preview-btn-close {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    color: #86868b;
+    transition: color 0.2s;
+}
+
+.preview-btn-close:hover {
+    color: #1d1d1f;
+}
+
+.preview-body {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+    background: #f5f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.preview-body.desktop {
+    min-width: 800px;
+}
+
+.preview-body.mobile {
+    min-width: 400px;
+}
+
+.preview-iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    border: none;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-body.desktop .preview-iframe {
+    max-width: 800px;
+}
+
+.preview-body.mobile .preview-iframe {
+    max-width: 375px;
+}

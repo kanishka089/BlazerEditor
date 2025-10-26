@@ -1,0 +1,10 @@
+/* Radzen HtmlEditor styling overrides */
+::deep .rz-html-editor {
+    min-height: 300px !important;
+}
+
+::deep .rz-html-editor-content {
+    min-height: 200px !important;
+    max-height: 400px;
+    overflow-y: auto;
+}
