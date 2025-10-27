@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BlazerEditorTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49ad78f2fda6f81d0a9d9f275fb7f5eab4ad4c20")]
 [assembly: System.Reflection.AssemblyProductAttribute("BlazerEditorTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BlazerEditorTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

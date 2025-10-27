@@ -19,7 +19,7 @@ using BlazerEditor;
 services.AddBlazerEditor();
 ```
 
-### 2. Add CSS Reference
+### 2. Add CSS and JavaScript References
 
 Choose ONE of the following options:
 
@@ -28,6 +28,7 @@ Add to your `_Host.cshtml` (Blazor Server) or `index.html` (Blazor WebAssembly):
 
 ```html
 <link href="_content/BlazerEditor/BlazerEditor.bundle.scp.css" rel="stylesheet" />
+<script src="_content/BlazerEditor/js/mergeTagAutocomplete.js"></script>
 ```
 
 #### Option B: Direct CSS File
@@ -35,6 +36,7 @@ Alternatively, use the direct CSS file:
 
 ```html
 <link href="_content/BlazerEditor/css/blazereditor.css" rel="stylesheet" />
+<script src="_content/BlazerEditor/js/mergeTagAutocomplete.js"></script>
 ```
 
 ### 3. Add Using Statements

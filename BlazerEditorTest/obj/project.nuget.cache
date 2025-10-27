@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3k1SGKqHd2Q=",
+  "dgSpecHash": "EI8nlWW5xbg=",
   "success": true,
-  "projectFilePath": "D:\\Company\\EmailEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
+  "projectFilePath": "D:\\Company\\BlazerEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kanis\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.0\\microsoft.aspnetcore.authorization.8.0.0.nupkg.sha512",
     "C:\\Users\\kanis\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.0\\microsoft.aspnetcore.components.8.0.0.nupkg.sha512",

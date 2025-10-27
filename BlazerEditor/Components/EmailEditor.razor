@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject HtmlExportService HtmlExportService
 @inject DesignService DesignService
+@inject MergeTagService MergeTagService
 
 <div class="blazer-editor @ThemeClass" style="min-height: @(Options.MinHeight)px;">
     <div class="editor-container">
@@ -30,6 +31,16 @@
                     <span class="icon">📱</span>
                 </button>
             </div>
+
+            @if (Options.EnableMergeTags && _mergeTags.Any())
+            {
+                <div class="toolbar-section">
+                    <MergeTagPicker MergeTags="_mergeTags" 
+                                    OnTagInsert="HandleMergeTagInsert"
+                                    OnPreviewModeChanged="HandleMergeTagPreviewChanged"
+                                    ShowPreviewToggle="Options.ShowMergeTagPreview" />
+                </div>
+            }
 
             <div class="toolbar-section toolbar-actions">
                 @if (ShowExportButton)
@@ -433,7 +444,8 @@
                 <div class="form-group">
                     <label>Text Content</label>
                     <RichTextEditor Value="@(content.Values.Text ?? "")" 
-                                    ValueChanged="@((value) => { content.Values.Text = value; StateHasChanged(); })" />
+                                    ValueChanged="@((value) => { content.Values.Text = value; StateHasChanged(); })"
+                                    MergeTags="_mergeTags" />
                 </div>
                 <div class="form-group">
                     <label>Font Size</label>

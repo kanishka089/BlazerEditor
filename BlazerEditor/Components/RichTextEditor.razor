@@ -1,48 +1,56 @@
 @using Radzen.Blazor
+@using BlazerEditor.Models
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
-<RadzenHtmlEditor @bind-Value="@CurrentValue" 
-                  style="height: 300px; min-height: 300px;"
-                  UploadUrl="upload/image">
-    <RadzenHtmlEditorUndo />
-    <RadzenHtmlEditorRedo />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorBold />
-    <RadzenHtmlEditorItalic />
-    <RadzenHtmlEditorUnderline />
-    <RadzenHtmlEditorStrikeThrough />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorColor />
-    <RadzenHtmlEditorBackground />
-    <RadzenHtmlEditorRemoveFormat />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorAlignLeft />
-    <RadzenHtmlEditorAlignCenter />
-    <RadzenHtmlEditorAlignRight />
-    <RadzenHtmlEditorJustify />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorIndent />
-    <RadzenHtmlEditorOutdent />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorUnorderedList />
-    <RadzenHtmlEditorOrderedList />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorFormatBlock />
-    <RadzenHtmlEditorFontSize />
-    <RadzenHtmlEditorFontName />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorLink />
-    <RadzenHtmlEditorUnlink />
-    <RadzenHtmlEditorImage />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorSubscript />
-    <RadzenHtmlEditorSuperscript />
-    <RadzenHtmlEditorSeparator />
-    <RadzenHtmlEditorSource />
-</RadzenHtmlEditor>
+<div id="@EditorId">
+    <RadzenHtmlEditor @bind-Value="@CurrentValue" 
+                      style="height: 300px; min-height: 300px;"
+                      UploadUrl="upload/image">
+        <RadzenHtmlEditorUndo />
+        <RadzenHtmlEditorRedo />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorBold />
+        <RadzenHtmlEditorItalic />
+        <RadzenHtmlEditorUnderline />
+        <RadzenHtmlEditorStrikeThrough />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorColor />
+        <RadzenHtmlEditorBackground />
+        <RadzenHtmlEditorRemoveFormat />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorAlignLeft />
+        <RadzenHtmlEditorAlignCenter />
+        <RadzenHtmlEditorAlignRight />
+        <RadzenHtmlEditorJustify />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorIndent />
+        <RadzenHtmlEditorOutdent />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorUnorderedList />
+        <RadzenHtmlEditorOrderedList />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorFormatBlock />
+        <RadzenHtmlEditorFontSize />
+        <RadzenHtmlEditorFontName />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorLink />
+        <RadzenHtmlEditorUnlink />
+        <RadzenHtmlEditorImage />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorSubscript />
+        <RadzenHtmlEditorSuperscript />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorSource />
+    </RadzenHtmlEditor>
+</div>
 
 @code {
     [Parameter] public string Value { get; set; } = "";
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public List<MergeTag>? MergeTags { get; set; }
+    [Parameter] public string EditorId { get; set; } = Guid.NewGuid().ToString("N");
 
     private string CurrentValue
     {
@@ -52,6 +60,21 @@
             Value = value;
             ValueChanged.InvokeAsync(value);
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && MergeTags != null && MergeTags.Any())
+        {
+            // Wait a bit for Radzen to initialize
+            await Task.Delay(500);
+            
+            // Initialize autocomplete with merge tags
+            var mergeTagsJson = System.Text.Json.JsonSerializer.Serialize(MergeTags);
+            await JSRuntime.InvokeVoidAsync("blazerEditorAutocompleteInitialize", EditorId, mergeTagsJson);
+        }
+        
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     protected override void OnInitialized()
@@ -64,6 +87,22 @@
             Value == "Enter your text here...")
         {
             Value = "";
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            // Cleanup autocomplete state if needed
+            if (JSRuntime is IJSInProcessRuntime jsRuntime)
+            {
+                // Can add cleanup logic here if needed
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Browser disconnected, ignore
         }
     }
 }

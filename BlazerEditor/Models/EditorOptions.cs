@@ -39,6 +39,16 @@ public class EditorOptions
     /// Custom merge tags for personalization
     /// </summary>
     public List<MergeTag>? MergeTags { get; set; }
+
+    /// <summary>
+    /// Enable merge tags feature
+    /// </summary>
+    public bool EnableMergeTags { get; set; } = true;
+
+    /// <summary>
+    /// Show merge tag preview mode toggle
+    /// </summary>
+    public bool ShowMergeTagPreview { get; set; } = true;
 }
 
 public class AppearanceConfig
@@ -77,12 +87,7 @@ public class FeaturesConfig
     public bool Import { get; set; } = true;
 }
 
-public class MergeTag
-{
-    public string Name { get; set; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
-    public string? Sample { get; set; }
-}
+// MergeTag class moved to separate file: Models/MergeTag.cs
 
 public enum DisplayMode
 {

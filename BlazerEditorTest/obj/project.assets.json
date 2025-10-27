@@ -783,11 +783,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Company\\EmailEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
+      "projectUniqueName": "D:\\Company\\BlazerEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
       "projectName": "BlazerEditorTest",
-      "projectPath": "D:\\Company\\EmailEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
+      "projectPath": "D:\\Company\\BlazerEditor\\BlazerEditorTest\\BlazerEditorTest.csproj",
       "packagesPath": "C:\\Users\\kanis\\.nuget\\packages\\",
-      "outputPath": "D:\\Company\\EmailEditor\\BlazerEditorTest\\obj\\",
+      "outputPath": "D:\\Company\\BlazerEditor\\BlazerEditorTest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -809,8 +809,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Company\\EmailEditor\\BlazerEditor\\BlazerEditor.csproj": {
-              "projectPath": "D:\\Company\\EmailEditor\\BlazerEditor\\BlazerEditor.csproj"
+            "D:\\Company\\BlazerEditor\\BlazerEditor\\BlazerEditor.csproj": {
+              "projectPath": "D:\\Company\\BlazerEditor\\BlazerEditor\\BlazerEditor.csproj"
             }
           }
         }

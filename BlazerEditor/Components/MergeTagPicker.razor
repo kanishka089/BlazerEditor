@@ -1,0 +1,188 @@
+@using BlazerEditor.Models
+
+<div class="merge-tag-picker @(IsOpen ? "open" : "")">
+    <button class="merge-tag-button" @onclick="TogglePicker" title="Insert Merge Tag">
+        <span class="icon">🏷️</span>
+        <span class="label">Merge Tags</span>
+        <span class="arrow">@(IsOpen ? "▲" : "▼")</span>
+    </button>
+
+    @if (IsOpen)
+    {
+        <div class="merge-tag-dropdown" @onclick:stopPropagation>
+            <div class="dropdown-header">
+                <input type="text" 
+                       class="search-input" 
+                       placeholder="🔍 Search tags..." 
+                       @bind="SearchQuery" 
+                       @bind:event="oninput"
+                       @onclick:stopPropagation />
+            </div>
+
+            <div class="dropdown-content">
+                @if (FilteredTags.Any())
+                {
+                    @foreach (var category in FilteredTags.GroupBy(t => t.Category).OrderBy(g => GetCategoryOrder(g.Key)))
+                    {
+                        <div class="tag-category">
+                            <div class="category-header" @onclick="() => ToggleCategory(category.Key)">
+                                <span class="category-icon">@GetCategoryIcon(category.Key)</span>
+                                <span class="category-name">@category.Key</span>
+                                <span class="category-count">(@category.Count())</span>
+                                <span class="category-arrow">@(IsCategoryExpanded(category.Key) ? "▼" : "▶")</span>
+                            </div>
+                            @if (IsCategoryExpanded(category.Key))
+                            {
+                                <div class="category-tags">
+                                    @foreach (var tag in category)
+                                    {
+                                        <div class="tag-item" @onclick="() => OnTagSelected(tag)" @onclick:stopPropagation title="@tag.Description">
+                                            <div class="tag-info">
+                                                <span class="tag-name">@tag.Name</span>
+                                                <span class="tag-value">@tag.Value</span>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(tag.Sample))
+                                            {
+                                                <span class="tag-sample">@tag.Sample</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="no-results">
+                        <span class="icon">🔍</span>
+                        <p>No merge tags found</p>
+                    </div>
+                }
+            </div>
+
+            @if (ShowPreviewToggle)
+            {
+                <div class="dropdown-footer">
+                    <label class="preview-toggle">
+                        <input type="checkbox" @bind="PreviewMode" @bind:event="onchange" />
+                        <span>Show preview values</span>
+                    </label>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<MergeTag> MergeTags { get; set; } = new();
+    [Parameter] public EventCallback<MergeTag> OnTagInsert { get; set; }
+    [Parameter] public EventCallback<bool> OnPreviewModeChanged { get; set; }
+    [Parameter] public bool ShowPreviewToggle { get; set; } = true;
+
+    private bool IsOpen { get; set; }
+    private string SearchQuery { get; set; } = string.Empty;
+    private bool _previewMode;
+    private HashSet<string> _expandedCategories = new();
+
+    private bool PreviewMode
+    {
+        get => _previewMode;
+        set
+        {
+            _previewMode = value;
+            OnPreviewModeChanged.InvokeAsync(value);
+        }
+    }
+
+    private List<MergeTag> FilteredTags
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+                return MergeTags;
+
+            var query = SearchQuery.ToLower();
+            return MergeTags.Where(t =>
+                t.Name.ToLower().Contains(query) ||
+                t.Value.ToLower().Contains(query) ||
+                t.Category.ToLower().Contains(query) ||
+                (t.Description?.ToLower().Contains(query) ?? false)
+            ).ToList();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        // Expand all categories by default
+        var categories = MergeTags.Select(t => t.Category).Distinct();
+        foreach (var category in categories)
+        {
+            _expandedCategories.Add(category);
+        }
+    }
+
+    private void TogglePicker()
+    {
+        IsOpen = !IsOpen;
+        if (IsOpen)
+        {
+            // Expand all categories when opening
+            var categories = MergeTags.Select(t => t.Category).Distinct();
+            foreach (var category in categories)
+            {
+                _expandedCategories.Add(category);
+            }
+        }
+    }
+
+    private void ToggleCategory(string category)
+    {
+        if (_expandedCategories.Contains(category))
+        {
+            _expandedCategories.Remove(category);
+        }
+        else
+        {
+            _expandedCategories.Add(category);
+        }
+    }
+
+    private bool IsCategoryExpanded(string category)
+    {
+        return _expandedCategories.Contains(category);
+    }
+
+    private int GetCategoryOrder(string category)
+    {
+        return category switch
+        {
+            "Personal" => 1,
+            "Company" => 2,
+            "Links" => 3,
+            "System" => 4,
+            "Custom" => 5,
+            _ => 99
+        };
+    }
+
+    private async Task OnTagSelected(MergeTag tag)
+    {
+        await OnTagInsert.InvokeAsync(tag);
+        IsOpen = false;
+        SearchQuery = string.Empty;
+    }
+
+    private string GetCategoryIcon(string category)
+    {
+        return category switch
+        {
+            "Personal" => "👤",
+            "Company" => "🏢",
+            "Links" => "🔗",
+            "System" => "⚙️",
+            "Custom" => "✨",
+            _ => "📋"
+        };
+    }
+}

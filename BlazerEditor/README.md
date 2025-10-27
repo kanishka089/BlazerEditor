@@ -3,77 +3,181 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)](https://dotnet.microsoft.com/)
 [![Blazor](https://img.shields.io/badge/Blazor-WebAssembly-blueviolet.svg)](https://blazor.net/)
-[![NuGet](https://img.shields.io/badge/NuGet-1.0.0-blue.svg)](https://www.nuget.org/)
+[![NuGet](https://img.shields.io/nuget/v/BlazerEditor.svg)](https://www.nuget.org/packages/BlazerEditor/)
 
-A powerful, free, and open-source drag-and-drop email template editor for Blazor applications. Inspired by Unlayer, but completely self-contained with no CDN dependencies.
+**A powerful, free, and open-source drag-and-drop email template editor for Blazor.**
 
-## Features
+Build beautiful responsive email templates with an intuitive visual editor. No CDN dependencies, 100% free, MIT licensed.
 
-- 🎨 **Drag & Drop Interface** - Intuitive visual email builder
-- 📱 **Responsive Design** - Mobile and desktop preview modes
-- 🎯 **Rich Components** - Text, images, buttons, dividers, columns, and more
-- 💾 **Export/Import** - Save designs as JSON, export as HTML
-- 🎨 **Customizable Themes** - Light and dark mode support
-- 🔧 **Extensible** - Add custom components and tools
-- 📦 **Self-Contained** - No external CDN dependencies
-- 🆓 **Free & Open Source** - MIT Licensed
+## ⚡ Quick Start (3 Steps)
 
-## Installation
-
+### 1️⃣ Install
 ```bash
 dotnet add package BlazerEditor
 ```
 
-## Quick Start
+### 2️⃣ Setup (Program.cs)
+```csharp
+builder.Services.AddBlazerEditor();
+builder.Services.AddRadzenComponents();
+```
 
+Add to `_Host.cshtml` or `index.html`:
+```html
+<link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css" />
+<link href="_content/BlazerEditor/css/blazereditor.css" rel="stylesheet" />
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+<script src="_content/BlazerEditor/js/mergeTagAutocomplete.js"></script>
+```
+
+### 3️⃣ Use
 ```razor
+@page "/editor"
 @using BlazerEditor
+@inject MergeTagService MergeTagService
 
-<EmailEditor @ref="editorRef" 
-             OnReady="OnEditorReady"
-             Options="editorOptions" />
+<EmailEditor @ref="editor" MergeTags="mergeTags" />
+<button @onclick="Export">Export HTML</button>
 
 @code {
-    private EmailEditor editorRef;
-    private EditorOptions editorOptions = new()
-    {
-        Appearance = new AppearanceConfig { Theme = "modern_light" },
-        DisplayMode = DisplayMode.Email
-    };
+    EmailEditor? editor;
+    List<MergeTag> mergeTags = new();
 
-    private void OnEditorReady()
-    {
-        Console.WriteLine("Editor is ready!");
-    }
+    protected override void OnInitialized() => 
+        mergeTags = MergeTagService.GetDefaultMergeTags();
 
-    private async Task ExportHtml()
-    {
-        var result = await editorRef.ExportHtmlAsync();
-        Console.WriteLine(result.Html);
-    }
-
-    private async Task SaveDesign()
-    {
-        var design = await editorRef.SaveDesignAsync();
-        // Save design JSON to database
-    }
-
-    private async Task LoadDesign(string designJson)
-    {
-        await editorRef.LoadDesignAsync(designJson);
+    async Task Export() {
+        var result = await editor!.ExportHtmlAsync();
+        Console.WriteLine(result.Html); // Use the HTML!
     }
 }
 ```
 
-## Documentation
+**That's it!** 🎉 You now have a fully functional email editor with merge tags.
 
-- 📚 [Getting Started](docs/GettingStarted.md)
-- 📖 [API Reference](docs/API.md)
-- 💡 [Examples](docs/Examples.md)
-- ✨ [Features](docs/Features.md)
-- 🔨 [Build Instructions](BUILD.md)
-- 🤝 [Contributing](CONTRIBUTING.md)
-- 📊 [Unlayer Comparison](docs/UnlayerComparison.md)
+---
+
+## 🏷️ Using Merge Tags (Super Simple!)
+
+Merge tags let you insert personalized data into emails (like `{{first_name}}`, `{{company}}`).
+
+### Two Ways to Insert Merge Tags:
+
+**1. Click the "Merge Tags 🏷️" button** → Browse categories → Click a tag
+```
+Personal: {{first_name}}, {{last_name}}, {{email}}
+Company: {{company}}, {{job_title}}
+Links: {{unsubscribe_url}}, {{view_online}}
+```
+
+**2. Type `{{` anywhere** → Autocomplete menu appears → Select tag
+```
+Type: {{fir  →  Shows "First Name"
+Type: {{com  →  Shows "Company Name"
+```
+
+### Custom Merge Tags:
+```csharp
+mergeTags = new List<MergeTag> {
+    new() { 
+        Name = "Customer Name",
+        Value = "{{customer_name}}",
+        Category = "Personal",
+        Sample = "John Doe"
+    }
+};
+```
+
+### Replace Tags with Real Data:
+```csharp
+var html = result.Html
+    .Replace("{{first_name}}", "John")
+    .Replace("{{company}}", "Acme Corp");
+// Send personalized email!
+```
+
+That's all you need to know about merge tags! Simple and powerful. 🎉
+
+---
+
+## Features
+
+- 🎨 **Drag & Drop Interface** - Intuitive visual email builder with real-time preview
+- 📱 **Responsive Design** - Mobile and desktop preview modes
+- 🎯 **Rich Components** - Text, images, buttons, headings, dividers, columns, and more
+- 🏷️ **Merge Tags System** - Powerful merge tag support with:
+  - Dropdown picker with categorized tags
+  - Autocomplete (type `{{` to trigger)
+  - Custom tag categories
+  - Sample value preview
+  - Search and filter functionality
+- 💾 **Export/Import** - Save designs as JSON, export as production-ready HTML
+- 🎨 **Customizable Themes** - Light and dark mode support
+- ↩️ **Undo/Redo** - Full history management
+- 🔧 **Extensible** - Add custom components and tools
+- 📦 **Self-Contained** - No external CDN dependencies, works offline
+- 🆓 **Free & Open Source** - MIT Licensed, no restrictions
+
+## 📚 Complete Example
+
+```razor
+@page "/email-builder"
+@using BlazerEditor
+@inject MergeTagService MergeTagService
+
+<h3>Email Template Builder</h3>
+
+<EmailEditor @ref="editor" 
+             MergeTags="mergeTags"
+             Options="options" />
+
+<div class="actions">
+    <button @onclick="ExportHtml">📤 Export HTML</button>
+    <button @onclick="SaveDesign">💾 Save Design</button>
+    <button @onclick="LoadDesign">📂 Load Design</button>
+</div>
+
+@code {
+    EmailEditor? editor;
+    List<MergeTag> mergeTags = new();
+    EditorOptions options = new() {
+        Appearance = new() { Theme = "modern_light" },
+        DisplayMode = DisplayMode.Email
+    };
+
+    protected override void OnInitialized() {
+        // Get default merge tags (or create custom ones)
+        mergeTags = MergeTagService.GetDefaultMergeTags();
+    }
+
+    async Task ExportHtml() {
+        var result = await editor!.ExportHtmlAsync();
+        if (result.Success) {
+            // Use result.Html - send email, save to file, etc.
+            await SendEmail(result.Html);
+        }
+    }
+
+    async Task SaveDesign() {
+        var json = await editor!.SaveDesignAsync();
+        // Save to database
+        await SaveToDatabase(json);
+    }
+
+    async Task LoadDesign() {
+        var json = await LoadFromDatabase();
+        await editor!.LoadDesignAsync(json);
+    }
+}
+```
+
+**That's it!** You're ready to build beautiful email templates. 🚀
+
+## Need Help?
+
+- 💬 [GitHub Discussions](https://github.com/kanishka089/BlazerEditor/discussions) - Ask questions
+- 🐛 [Issue Tracker](https://github.com/kanishka089/BlazerEditor/issues) - Report bugs
+- ⭐ [Star on GitHub](https://github.com/kanishka089/BlazerEditor) - Show your support
 
 ## Why BlazerEditor?
 
@@ -96,7 +200,7 @@ dotnet add package BlazerEditor
 | Offline Support | No | Yes |
 | Customization | Limited | Unlimited |
 
-See [detailed comparison](docs/UnlayerComparison.md) for more information.
+
 
 ## Contributing
 
@@ -106,7 +210,7 @@ We welcome contributions! Whether it's:
 - 📝 Documentation improvements
 - 🔧 Code contributions
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Open an issue or pull request on [GitHub](https://github.com/kanishka089/BlazerEditor)!
 
 ## Roadmap
 
@@ -120,11 +224,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 - [ ] Custom fonts
 - [ ] Collaboration features
 
-## Support
 
-- 💬 [GitHub Discussions](https://github.com/yourusername/blazereditor/discussions)
-- 🐛 [Issue Tracker](https://github.com/yourusername/blazereditor/issues)
-- 📧 Email: support@blazereditor.dev
 
 ## License
 

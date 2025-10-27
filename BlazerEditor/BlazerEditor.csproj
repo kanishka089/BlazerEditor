@@ -6,17 +6,62 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>BlazerEditor</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Your Name</Authors>
-    <Company>Your Company</Company>
-    <Description>A powerful, free, and open-source drag-and-drop email template editor for Blazor applications. Build beautiful responsive email templates with an intuitive visual editor.</Description>
-    <PackageTags>blazor;email;editor;template;wysiwyg;drag-drop;email-builder;blazor-component</PackageTags>
+    <Version>1.0.4</Version>
+    <Authors>BlazerEditor Contributors</Authors>
+    <Company>BlazerEditor</Company>
+    <Product>BlazerEditor</Product>
+    <Title>BlazerEditor - Email Template Editor for Blazor</Title>
+    <Description>A powerful, free, and open-source drag-and-drop email template editor for Blazor applications. Build beautiful responsive email templates with an intuitive visual editor. Features include merge tags with autocomplete, responsive design, rich components, and no CDN dependencies. Perfect for creating marketing emails, newsletters, and transactional emails in your Blazor apps.</Description>
+    <PackageTags>blazor;email;editor;template;wysiwyg;drag-drop;email-builder;blazor-component;merge-tags;email-template;html-email;responsive-email;blazor-server;blazor-webassembly;email-designer;visual-editor</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/yourusername/blazereditor</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/yourusername/blazereditor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kanishka089/BlazerEditor</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/kanishka089/BlazerEditor</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Initial release with drag-and-drop email editor, HTML export, and design save/load functionality.</PackageReleaseNotes>
+    <PackageReleaseNotes>v1.0.4 - Clean package with essential documentation only
+- Removed all extra documentation files
+- Single comprehensive README for NuGet users
+- Cleaner package structure
+- All features remain the same
+
+v1.0.3 - Simplified documentation and better examples
+- Completely redesigned README with 3-step quick start
+- Clear merge tags section with visual examples
+- Shows both UI methods (dropdown button + autocomplete)
+- Complete working code examples
+- Better visual hierarchy and organization
+- Easier for new users to get started
+
+v1.0.2 - Documentation and UI improvements
+- Enhanced merge tag picker UI with better styling
+- Comprehensive integration guide added
+- Detailed merge tags documentation
+- Quick start guides for NuGet users
+- Improved component styling and responsiveness
+- Fixed static web assets configuration
+- Added package information documentation
+- Better error handling and diagnostics
+
+v1.0.1 - Bug fixes
+- Fixed static assets loading issues
+- Improved component initialization
+
+v1.0.0 - Initial release
+- Drag-and-drop email template editor
+- Rich component library (text, image, button, heading, divider, columns)
+- Merge tags with dropdown picker and autocomplete (type {{ to trigger)
+- Responsive design with mobile/desktop preview
+- HTML export with inline CSS
+- Design save/load as JSON
+- Undo/redo functionality
+- No CDN dependencies - fully self-contained
+- Radzen Blazor UI integration
+- Customizable themes and appearance</PackageReleaseNotes>
+    <Copyright>Copyright © 2024 BlazerEditor Contributors</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,5 +77,7 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+
 
 </Project>

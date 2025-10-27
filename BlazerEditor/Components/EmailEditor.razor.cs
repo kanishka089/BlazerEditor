@@ -41,6 +41,10 @@ public partial class EmailEditor : ComponentBase
     private int _hoveredColumnIndex = -1;
     private int _splitClickCounter = 0;
 
+    // Merge Tags
+    private List<MergeTag> _mergeTags = new();
+    private bool _mergeTagPreviewMode = false;
+
     private readonly List<ComponentDefinition> _availableComponents = new()
     {
         new() { Type = "text", Label = "Text", Icon = "📝" },
@@ -58,6 +62,9 @@ public partial class EmailEditor : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         _currentDesign = DesignService.CreateEmptyDesign();
+        
+        // Initialize merge tags
+        InitializeMergeTags();
         
         // Add a default row on load
         if (!_currentDesign.Body.Rows.Any())
@@ -993,6 +1000,73 @@ public partial class EmailEditor : ComponentBase
             
             StateHasChanged();
         }
+    }
+
+    // Merge Tag Methods
+    private void InitializeMergeTags()
+    {
+        if (Options.MergeTags != null && Options.MergeTags.Any())
+        {
+            _mergeTags = Options.MergeTags;
+        }
+        else if (Options.EnableMergeTags)
+        {
+            // Use default merge tags
+            _mergeTags = MergeTagDefaults.GetDefaultTags();
+        }
+    }
+
+    private void HandleMergeTagInsert(MergeTag tag)
+    {
+        if (_selectedContent != null)
+        {
+            // Insert into selected content
+            if (_selectedContent.Type == "text" || _selectedContent.Type == "heading")
+            {
+                if (string.IsNullOrEmpty(_selectedContent.Values.Text))
+                {
+                    _selectedContent.Values.Text = tag.Value;
+                }
+                else
+                {
+                    _selectedContent.Values.Text += " " + tag.Value;
+                }
+                SaveToUndoStack();
+                StateHasChanged();
+            }
+            else if (_selectedContent.Type == "button")
+            {
+                if (string.IsNullOrEmpty(_selectedContent.Values.Text))
+                {
+                    _selectedContent.Values.Text = tag.Value;
+                }
+                else
+                {
+                    _selectedContent.Values.Text += " " + tag.Value;
+                }
+                SaveToUndoStack();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            // Show message to select content first
+            Console.WriteLine($"Please select a text element to insert merge tag: {tag.Name}");
+        }
+    }
+
+    private void HandleMergeTagPreviewChanged(bool previewMode)
+    {
+        _mergeTagPreviewMode = previewMode;
+        StateHasChanged();
+    }
+
+    private string GetContentTextWithMergeTags(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !_mergeTagPreviewMode)
+            return text;
+
+        return MergeTagService.ReplaceWithSamples(text, _mergeTags);
     }
 }
 

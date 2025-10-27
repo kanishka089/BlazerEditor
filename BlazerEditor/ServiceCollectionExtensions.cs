@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<HtmlExportService>();
         services.AddScoped<DesignService>();
         services.AddScoped<TemplateLibraryService>();
+        services.AddScoped<MergeTagService>();
         
         return services;
     }
