@@ -129,38 +129,82 @@ public partial class EmailEditor : ComponentBase
     }
 
     // Public API Methods
+    
+    /// <summary>
+    /// Exports the current design as HTML. Returns both the HTML string and the design JSON.
+    /// </summary>
+    /// <returns>ExportResult containing HTML and design JSON</returns>
     public async Task<ExportResult> ExportHtmlAsync()
     {
         var html = HtmlExportService.ExportToHtml(_currentDesign);
+        var designJson = DesignService.SerializeDesign(_currentDesign);
+        
         var result = new ExportResult
         {
             Html = html,
-            Design = _currentDesign
+            Design = _currentDesign,
+            DesignJson = designJson,
+            Success = true
         };
-        return result;
+        
+        return await Task.FromResult(result);
     }
 
-    public async Task<EmailDesign> SaveDesignAsync()
+    /// <summary>
+    /// Saves the current design and returns it as a JSON string.
+    /// This JSON can be stored in a database and loaded later using LoadDesignAsync.
+    /// </summary>
+    /// <returns>JSON string representation of the design</returns>
+    public async Task<string> SaveDesignAsync()
+    {
+        var designJson = DesignService.SerializeDesign(_currentDesign);
+        return await Task.FromResult(designJson);
+    }
+
+    /// <summary>
+    /// Gets the current design object (not serialized).
+    /// Use SaveDesignAsync() to get the JSON string instead.
+    /// </summary>
+    /// <returns>EmailDesign object</returns>
+    public EmailDesign GetDesign()
     {
         return _currentDesign;
     }
 
+    /// <summary>
+    /// Loads a design from a JSON string.
+    /// </summary>
+    /// <param name="designJson">JSON string from SaveDesignAsync()</param>
     public async Task LoadDesignAsync(string designJson)
     {
-        var design = DesignService.DeserializeDesign(designJson);
-        if (design != null)
+        try
         {
-            SaveToUndoStack();
-            _currentDesign = design;
-            StateHasChanged();
+            var design = DesignService.DeserializeDesign(designJson);
+            if (design != null)
+            {
+                SaveToUndoStack();
+                _currentDesign = design;
+                StateHasChanged();
+            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading design: {ex.Message}");
+        }
+        
+        await Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Loads a design from an EmailDesign object.
+    /// </summary>
+    /// <param name="design">EmailDesign object</param>
     public async Task LoadDesignAsync(EmailDesign design)
     {
         SaveToUndoStack();
         _currentDesign = design;
         StateHasChanged();
+        await Task.CompletedTask;
     }
 
     // Event Handlers

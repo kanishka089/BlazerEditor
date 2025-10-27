@@ -11,7 +11,7 @@ public class MergeTagService
     /// <summary>
     /// Replace merge tags in content with sample values for preview
     /// </summary>
-    public string ReplaceWithSamples(string content, List<MergeTag> mergeTags)
+    public static string ReplaceWithSamples(string content, List<MergeTag> mergeTags)
     {
         if (string.IsNullOrEmpty(content) || mergeTags == null || !mergeTags.Any())
             return content;

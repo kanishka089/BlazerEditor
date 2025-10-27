@@ -33,7 +33,9 @@ Add to `_Host.cshtml` or `index.html`:
 ### 3️⃣ Use
 ```razor
 @page "/editor"
-@using BlazerEditor
+@using BlazerEditor.Models
+@using BlazerEditor.Services
+@using BlazerEditor.Components
 @inject MergeTagService MergeTagService
 
 <EmailEditor @ref="editor" MergeTags="mergeTags" />
@@ -122,7 +124,9 @@ That's all you need to know about merge tags! Simple and powerful. 🎉
 
 ```razor
 @page "/email-builder"
-@using BlazerEditor
+@using BlazerEditor.Models
+@using BlazerEditor.Services
+@using BlazerEditor.Components
 @inject MergeTagService MergeTagService
 
 <h3>Email Template Builder</h3>
@@ -146,29 +150,65 @@ That's all you need to know about merge tags! Simple and powerful. 🎉
     };
 
     protected override void OnInitialized() {
-        // Get default merge tags (or create custom ones)
         mergeTags = MergeTagService.GetDefaultMergeTags();
     }
 
     async Task ExportHtml() {
         var result = await editor!.ExportHtmlAsync();
-        if (result.Success) {
-            // Use result.Html - send email, save to file, etc.
-            await SendEmail(result.Html);
-        }
+        
+        // result.Html - Ready-to-send HTML email
+        // result.DesignJson - Save this to database for later editing
+        
+        await SendEmail(result.Html);
+        await SaveToDatabase(result.DesignJson);
     }
 
     async Task SaveDesign() {
-        var json = await editor!.SaveDesignAsync();
-        // Save to database
-        await SaveToDatabase(json);
+        // Returns JSON string - save to database
+        var designJson = await editor!.SaveDesignAsync();
+        await SaveToDatabase(designJson);
     }
 
     async Task LoadDesign() {
-        var json = await LoadFromDatabase();
-        await editor!.LoadDesignAsync(json);
+        // Load JSON from database
+        var designJson = await LoadFromDatabase();
+        await editor!.LoadDesignAsync(designJson);
+    }
+
+    async Task SendEmail(string html) {
+        // Your email sending logic
+    }
+
+    async Task SaveToDatabase(string json) {
+        // Your database save logic
+    }
+
+    async Task<string> LoadFromDatabase() {
+        // Your database load logic
+        return "{}";
     }
 }
+```
+
+### 💾 Save & Load Example
+
+```csharp
+// Save design to database
+var designJson = await editor.SaveDesignAsync();
+await _dbContext.EmailTemplates.AddAsync(new EmailTemplate {
+    Name = "Welcome Email",
+    DesignJson = designJson,
+    CreatedAt = DateTime.UtcNow
+});
+await _dbContext.SaveChangesAsync();
+
+// Load design from database
+var template = await _dbContext.EmailTemplates.FindAsync(templateId);
+await editor.LoadDesignAsync(template.DesignJson);
+
+// Export HTML for sending
+var result = await editor.ExportHtmlAsync();
+await _emailService.SendAsync(recipient, subject, result.Html);
 ```
 
 **That's it!** You're ready to build beautiful email templates. 🚀
